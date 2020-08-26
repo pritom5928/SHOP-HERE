@@ -149,7 +149,7 @@ namespace ShopHere.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-
+            var name = "master";
 
             if (ModelState.IsValid)
             {
