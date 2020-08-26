@@ -142,6 +142,7 @@ namespace ShopHere.Web.Controllers
             return View();
         }
 
+
         //
         // POST: /Account/Register
         [HttpPost]
