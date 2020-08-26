@@ -1,0 +1,181 @@
+﻿@model ShopHere.Entities.Product
+@{
+    ViewBag.Title = "Update product";
+
+    var imageUrl = !string.IsNullOrEmpty(Model.ImageUrl) ? Model.ImageUrl : "/Content/images/placeholder.png";
+}
+
+<h2>Update product</h2>
+
+<form id="Updateproduct">
+
+    <input type="hidden" name="Id" value="@Model.Id" />
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Category</label>
+                <select name="CategoryId" class="form-control">
+                    @if (Model.Category != null)
+                    {
+                        <option value="@Model.CategoryId" selected>@Model.Category.Name</option>
+                        foreach (var item in ViewBag.Categories)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="">Select</option>
+                        foreach (var item in ViewBag.Categories)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    }
+
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+                <label for="exampleInputEmail1">Name <span class="text-danger">*</span></label>
+                <input name="Name" class="form-control" value="@Model.Name" />
+            </div>
+
+            <div class="form-group">
+                <label class="exampleInputEmail1">Description</label>
+                <input name="Description" class="form-control" value="@Model.Description" />
+            </div>
+
+            <div class="form-group">
+                <label class="exampleInputEmail1">Price <span class="text-danger">*</span></label>
+                <input name="Price" class="form-control" value="@Model.Price" />
+            </div>
+
+            <div class="form-group">
+                <label class="exampleInputEmail1">Image</label>
+                <input type="hidden" id="ImageURL" name="ImageURL" value="@Model.ImageUrl" />
+                <input class="form-control" id="imageUpload" name="Image" type="file" accept=".png, .jpg" />
+            </div>
+
+            <button type="button" class="btn btn-primary" id="updateBtn">Update</button>
+            <button type="button" class="btn btn-primary" id="cancelBtn">Cancel</button>
+        </div>
+
+        <div class="col-md-4">
+            <div class="thumb">
+                <img src="@imageUrl" class="img-thumbnail img-fluid" alt="Alternate Text" id="productImage" />
+            </div>
+        </div>
+    </div>
+
+   
+    <hr />
+
+</form>
+
+<script type="text/javascript">
+    
+    $('#Updateproduct').validate({
+        rules: {
+            Name: {
+                required: true,
+                minlength: 5,
+                maxlength: 100
+            },
+            Description: {
+                maxlength: 500
+            },
+            Price: {
+                digits: true,
+                range: [1, 1000000]
+            },
+        },
+        messages: {
+            Name: {
+                required: 'Name is required.',
+                minlength: 'Minimum length 5 character.',
+                maxlength: 'Maximum length 100 character.'
+            },
+            Description: {
+                maxlength: 'Maximum length 500 character.'
+            },
+            Price: {
+                digits: 'Enter numbers only',
+                range: 'Price must be within range of 1 - 1000000.'
+            },
+        }
+    });
+
+     $("#imageUpload").change(function () {
+		var element = this;
+		var formData = new FormData();
+		var totalFiles = element.files.length;
+		for (var i = 0; i < totalFiles; i++) {
+			var file = element.files[i];
+			formData.append("Photo", file);
+		}
+		$.ajax({
+			type: 'POST',
+			url: '@Url.Action("UploadImage", "Shared")',
+            dataType: 'json',
+            data: formData,
+            processData: false,
+            contentType: false,
+			
+		})
+        .done(function (response) {
+                debugger;
+        	console.log(response);
+        	if(response.Success)
+        	{
+        		$("#ImageURL").val(response.ImageURL);
+                $("#productImage").attr("src", response.ImageURL);
+        	}
+        })
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+        	alert("FAIL");
+        });
+	});
+
+    $("#updateBtn").click(function () {
+
+        if ($('#Updateproduct').valid())
+        {
+           $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Edit", "product")',
+                data: $("#Updateproduct").serialize()
+           })
+           .done(function (data) {
+                 $("#tableContainer").html(data);
+                 $("#actionContainer").html("");
+                 focusAaction("tableContainer");
+           })
+           .fail(function (XMLHTTPRequest, textStatus, errorThrown) {
+               swal({
+                   title: "Warning",
+                   text: "Please enter all required fields!",
+                   icon: "warning",
+                   dangerMode: true,
+               })
+           });
+        }
+
+        else {
+            swal({
+                title: "Warning",
+                text: "Please enter valid input in all fields!",
+                icon: "warning",
+                dangerMode: true,
+            })
+        }
+    });
+
+    $("#cancelBtn").click(function () {
+
+        $("#actionContainer").html("");
+        focusAaction("tableContainer");
+    });
+</script>

@@ -1,0 +1,161 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+
+    var imageURL = "/Content/images/placeholder.png";
+}
+
+
+<h2>Create product</h2>
+
+<form id="Createproduct">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Category</label>
+                <select name="CategoryId" class="form-control">
+                    @foreach (var item in ViewBag.Categories)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Name <span class="text-danger">*</span></label>
+                <input name="Name" class="form-control" placeholder="Name">
+            </div>
+
+            <div class="form-group">
+                <label for="exampleInputPassword1">Description</label>
+                <input name="Description" class="form-control" placeholder="Description">
+            </div>
+
+            <div class="form-group">
+                <label for="exampleInputPassword1">Price <span class="text-danger">*</span></label>
+                <input name="Price" class="form-control" placeholder="Price">
+            </div>
+            <div class="form-group">
+                <label>Image</label>
+                <input type="hidden" id="ImageURL" name="ImageURL" />
+                <input class="form-control" id="imageUpload" name="Image" type="file" accept=".png, .jpg" />
+            </div>
+
+            <button type="button" id="saveBtn" class="btn btn-primary">Save</button>
+            <button type="button" id="cancelBtn" class="btn btn-primary">Cancel</button>
+        </div>
+
+        <div class="col-md-4">
+            <div class="thumb">
+                <img class="img-thumbnail img-fluid" id="productImage" src="@imageURL" />
+            </div>
+        </div>
+    </div>
+    <hr />
+</form>
+
+
+<script type="text/javascript">
+
+    $('#Createproduct').validate({
+        rules: {
+            Name: {
+                required: true,
+                minlength: 5,
+                maxlength: 100
+            },
+            Description: {
+                maxlength: 500
+            },
+            Price: {
+                digits: true,
+                range: [1, 1000000]
+            },
+        },
+        messages: {
+            Name: {
+                required: 'Name is required.',
+                minlength: 'Minimum length 5 character.',
+                maxlength: 'Maximum length 100 character.'
+            },
+            Description: {
+                maxlength: 'Maximum length 500 character.'
+            },
+            Price: {
+                digits: 'Enter numbers only',
+                range: 'Price must be within range of 1 - 1000000.'
+            },
+        }
+    });
+
+    $("#imageUpload").change(function () {
+		var element = this;
+		var formData = new FormData();
+		var totalFiles = element.files.length;
+		for (var i = 0; i < totalFiles; i++) {
+			var file = element.files[i];
+			formData.append("Photo", file);
+		}
+		$.ajax({
+			type: 'POST',
+			url: '@Url.Action("UploadImage", "Shared")',
+            dataType: 'json',
+            data: formData,
+            contentType: false,
+            processData: false,
+		})
+        .done(function (response) {
+        	console.log(response);
+        	if(response.Success)
+        	{
+        		$("#ImageURL").val(response.ImageURL);
+                $("#productImage").attr("src", response.ImageURL);
+        	}
+        })
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+        	alert("FAIL");
+        });
+	});
+
+    $("#saveBtn").click(function () {
+
+        if ($('#Createproduct').valid())
+        {
+            $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Create", "Product")',
+            data: $("#Createproduct").serialize()
+            })
+            .done(function (data) {
+                $("#tableContainer").html(data);
+                $("#actionContainer").html("");
+                focusAaction("tableContainer");
+            })
+            .fail(function (XMLHTTPRequest, textStatus, errorThrown) {
+                swal({
+                    title: "Warning",
+                    text: "Please enter all required fields!",
+                    icon: "warning",
+                    dangerMode: true,
+                })
+            });
+        }
+
+        else {
+            swal({
+                title: "Warning",
+                text: "Please enter valid input in all fields!",
+                icon: "warning",
+                dangerMode: true,
+            })
+        }
+        
+    });
+
+    $("#cancelBtn").click(function () {
+
+        $("#actionContainer").html("");
+        focusAaction("tableContainer");
+    });
+
+</script>

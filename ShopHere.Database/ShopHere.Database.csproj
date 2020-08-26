@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F7D3A1F9-B7E4-49FE-AA07-16AAAD96262A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ShopHere.Database</RootNamespace>
+    <AssemblyName>ShopHere.Database</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Migrations\202005290456140_initial.cs" />
+    <Compile Include="Migrations\202005290456140_initial.designer.cs">
+      <DependentUpon>202005290456140_initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202006291022534_ImageUrl_added.cs" />
+    <Compile Include="Migrations\202006291022534_ImageUrl_added.designer.cs">
+      <DependentUpon>202006291022534_ImageUrl_added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007140550021_newAttributeAddedOnProductTable.cs" />
+    <Compile Include="Migrations\202007140550021_newAttributeAddedOnProductTable.designer.cs">
+      <DependentUpon>202007140550021_newAttributeAddedOnProductTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007160524288_isfeaturedAddedOncategoryTable.cs" />
+    <Compile Include="Migrations\202007160524288_isfeaturedAddedOncategoryTable.designer.cs">
+      <DependentUpon>202007160524288_isfeaturedAddedOncategoryTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007230539179_relationshipChanged.cs" />
+    <Compile Include="Migrations\202007230539179_relationshipChanged.designer.cs">
+      <DependentUpon>202007230539179_relationshipChanged.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007251301363_configTableAdded.cs" />
+    <Compile Include="Migrations\202007251301363_configTableAdded.designer.cs">
+      <DependentUpon>202007251301363_configTableAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007281819357_imageUrlAddedOnProductTable.cs" />
+    <Compile Include="Migrations\202007281819357_imageUrlAddedOnProductTable.designer.cs">
+      <DependentUpon>202007281819357_imageUrlAddedOnProductTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008010518239_validationsAddedOnServerside.cs" />
+    <Compile Include="Migrations\202008010518239_validationsAddedOnServerside.designer.cs">
+      <DependentUpon>202008010518239_validationsAddedOnServerside.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008120448567_mmmm.cs" />
+    <Compile Include="Migrations\202008120448567_mmmm.designer.cs">
+      <DependentUpon>202008120448567_mmmm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008151126033_NewAttributeAddedOnproductTabl.cs" />
+    <Compile Include="Migrations\202008151126033_NewAttributeAddedOnproductTabl.designer.cs">
+      <DependentUpon>202008151126033_NewAttributeAddedOnproductTabl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008151700418_orderDateModified.cs" />
+    <Compile Include="Migrations\202008151700418_orderDateModified.designer.cs">
+      <DependentUpon>202008151700418_orderDateModified.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008151806471_addedQuantityToOrderItem.cs" />
+    <Compile Include="Migrations\202008151806471_addedQuantityToOrderItem.designer.cs">
+      <DependentUpon>202008151806471_addedQuantityToOrderItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202008191953154_editConfigKeyToAttribute.cs" />
+    <Compile Include="Migrations\202008191953154_editConfigKeyToAttribute.designer.cs">
+      <DependentUpon>202008191953154_editConfigKeyToAttribute.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="ProjectDbContext.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="EntityFramework">
+      <Version>6.4.4</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ShopHere.Entities\ShopHere.Entities.csproj">
+      <Project>{523843C0-73C1-4FCB-9C37-828740067747}</Project>
+      <Name>ShopHere.Entities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202005290456140_initial.resx">
+      <DependentUpon>202005290456140_initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006291022534_ImageUrl_added.resx">
+      <DependentUpon>202006291022534_ImageUrl_added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007140550021_newAttributeAddedOnProductTable.resx">
+      <DependentUpon>202007140550021_newAttributeAddedOnProductTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007160524288_isfeaturedAddedOncategoryTable.resx">
+      <DependentUpon>202007160524288_isfeaturedAddedOncategoryTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007230539179_relationshipChanged.resx">
+      <DependentUpon>202007230539179_relationshipChanged.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007251301363_configTableAdded.resx">
+      <DependentUpon>202007251301363_configTableAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007281819357_imageUrlAddedOnProductTable.resx">
+      <DependentUpon>202007281819357_imageUrlAddedOnProductTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008010518239_validationsAddedOnServerside.resx">
+      <DependentUpon>202008010518239_validationsAddedOnServerside.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008120448567_mmmm.resx">
+      <DependentUpon>202008120448567_mmmm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008151126033_NewAttributeAddedOnproductTabl.resx">
+      <DependentUpon>202008151126033_NewAttributeAddedOnproductTabl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008151700418_orderDateModified.resx">
+      <DependentUpon>202008151700418_orderDateModified.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008151806471_addedQuantityToOrderItem.resx">
+      <DependentUpon>202008151806471_addedQuantityToOrderItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202008191953154_editConfigKeyToAttribute.resx">
+      <DependentUpon>202008191953154_editConfigKeyToAttribute.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

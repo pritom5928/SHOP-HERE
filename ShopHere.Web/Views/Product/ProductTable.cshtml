@@ -1,0 +1,289 @@
+﻿
+@model ShopHere.Web.ViewModels.ProductSearchViewModel
+
+@{
+    ViewBag.Title = "ProductTable";
+}
+
+@*<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>*@
+
+<div>
+    <form action="/Product/ProductTable" method="post">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="form-group">
+                    <label>Search</label>
+                    <input placeholder="Search" class="form-control" id="searchText" value="@Model.searchTerm" />
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label>Action</label>
+                    <div class="row">
+                        <div class="col-sm-4 pr-0">
+                            <button class="btn btn-primary form-control" type="button" id="searchBtn">Search</button>
+                        </div>
+                        <div class="col-sm-4 pr-0">
+                            <button class="btn btn-primary form-control" type="button" id="resetBtn">Reset</button>
+                        </div>
+                        <div class="col-sm-4 pr-0">
+                            <button class="btn btn-primary form-control" type="button" id="newBtn">  New  </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+<div>
+    <table class="table table-striped" id="productTable">
+        <thead>
+            <tr>
+                <th class="font-weight-bold">product Name</th>
+                <th class="font-weight-bold">Category</th>
+                <th class="font-weight-bold">Price</th>
+                <th class="font-weight-bold wrap-td">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Products != null && Model.Products.Count > 0)
+            {
+                foreach (var item in Model.Products)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>
+                            @if (item.Category != null)
+                            {
+                                <text> @item.Category.Name </text>
+                            }
+
+                            else
+                            {
+                                <text>-</text>
+                            }
+                        </td>
+                        <td>@item.Price</td>
+                        <td class="wrap-td">
+                            <button class="editBtn" productId="@item.Id">Edit </button>
+                            <button class="deleteBtn" productId="@item.Id">Delete </button>
+                            <button class="addToCartBtn" productId="@item.Id">Add To Cart </button>
+                        </td>
+                    </tr>
+                }
+            }
+
+            else
+            {
+                <tr>
+                    <td class="text-danger" colspan="4">No products Found</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+    <div>
+        @if (Model.Pager != null && Model.Pager.TotalPages > 1)
+        {
+            if (Model.Pager.CurrentPage > 1)
+            {
+                <button class="pageBtn" data-pageno="1">First </button>
+                <button class="pageBtn" data-pageno="@(Model.Pager.CurrentPage - 1)">Previous </button>
+            }
+
+            for (int page = Model.Pager.StartPage; page <= Model.Pager.EndPage; page++)
+            {
+                var activeClass = Model.Pager.CurrentPage == page ? "active bg-info" : string.Empty;
+
+                <button class="@activeClass pageBtn" data-pageno="@page">@page </button>
+            }
+
+            if (Model.Pager.CurrentPage < Model.Pager.EndPage)
+            {
+
+                <button class="pageBtn" data-pageno="@(Model.Pager.CurrentPage + 1)">Next </button>
+                <button class="pageBtn" data-pageno="@(Model.Pager.EndPage)">Last </button>
+            }
+        }
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+
+
+    $(".pageBtn").click(function () {
+
+        $.ajax({
+            url: '@Url.Action("ProductTable", "Product")',
+            data: {
+                pageNum: $(this).attr('data-pageno')
+            }
+        }).done(function (data) {
+
+            $("#tableContainer").html(data);
+
+        }).fail(function (XMLHTTPRequest, textStatus, errorThrown) {
+
+            alert("Failed");
+        });
+    });
+
+
+    $("#resetBtn").click(function () {
+        var searchValue = '';
+
+        $.ajax({
+
+            url: '@Url.Action("ProductTable", "Product")',
+            data: {
+                search: searchValue
+            }
+
+        }).done(function (data) {
+
+            $("#tableContainer").html(data);
+
+        }).fail(function (XMLHTTPRequest, textStatus, errorThrown) {
+
+            alert("Failed");
+        });
+    });
+
+    $("#searchBtn").click(function () {
+        var searchValue = $("#searchText").val();
+
+        $.ajax({
+
+            url: '@Url.Action("ProductTable", "Product")',
+            data: {
+                search: searchValue
+            }
+
+        }).done(function (data) {
+
+            $("#tableContainer").html(data);
+
+        }).fail(function (XMLHTTPRequest, textStatus, errorThrown) {
+
+            alert("Failed");
+        });
+    });
+
+
+    var productAddToCartList = [];
+    $(".addToCartBtn").click(function () {
+        var productId = $(this).attr("productId");
+
+        productAddToCartList.push(productId);
+
+        $.cookie('Cartproducts', productAddToCartList.join('-'), {path : '/'});
+
+        swal("Done!", "product Added to Cart Successfully!", "success");
+    });
+
+    $("#newBtn").click(function () {
+
+        $.ajax({
+            type: 'Get',
+            url: '@Url.Action("Create", "Product")',
+        }).done(function (data) {
+
+            $("#actionContainer").html(data);
+            focusAaction("actionContainer");
+        }).fail(function (XMLHTTPRequest, textStatus, errorThrown) {
+
+            alert("Failed");
+        });
+    });
+
+    $(".editBtn").click(function () {
+        debugger;
+        $.ajax({
+            type: 'Get',
+            url: '@Url.Action("Edit", "Product")',
+            data: {
+                id: $(this).attr('productId')
+            }
+        }).done(function (data) {
+            debugger;
+            $("#actionContainer").html(data);
+            focusAaction("actionContainer");
+
+        }).fail(function (XMLHTTPRequest, textStatus, errorThrown) {
+
+            alert("Failed");
+        });
+    });
+
+
+    $(".deleteBtn").click(function () {
+        debugger;
+        //var confirmDelete = confirm("Are you sure want to delete this product?");
+
+        swal({
+            title: "Confirm?",
+            text: "Are you sure want to delete this product???",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+
+                if (willDelete) {
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("Delete", "Product")',
+                        data: {
+                            id: $(this).attr('productId')
+                        }
+                    }).done(function (data) {
+
+                        $("#tableContainer").html(data);
+
+                        swal("product Has deleted Successfully!!!", {
+                            icon: "success",
+                        });
+
+
+                    }).fail(function (XMLHTTPRequest, textStatus, errorThrown) {
+
+                        swal("Something went wrong, Please Try Again!!!", {
+
+                            icon: "warning",
+
+                        });
+                    });
+
+                }
+        });
+
+        //if (confirmDelete) {
+        //    $.ajax({
+        //        type: 'POST',
+        //        url: '/product/Delete',
+        //        data: {
+        //            id: $(this).attr('productId')
+        //        }
+        //    }).done(function (data) {
+
+        //        $("#tableContainer").html(data);
+
+        //    }).fail(function (XMLHTTPRequest, textStatus, errorThrown) {
+
+        //        alert("Failed");
+        //    });
+        //}
+
+    });
+
+
+
+</script>
+

@@ -1,0 +1,128 @@
+﻿@model ShopHere.Web.ViewModels.OrderDetailsViewModel
+@{
+    ViewBag.Title = "Check Out";
+}
+
+@if (Model != null && Model.Order != null)
+{
+    var i = 1;
+    <section class="flat-row main-shop shop-slidebar">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-5">
+                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">Your cart</span>
+                    </h4>
+                    <ul class="list-group mb-3">
+
+                        @foreach (var orderitem in Model.Order.OrderItems)
+                        {
+
+                            <li class="list-group-item d-flex justify-content-between lh-condensed" data-id="@orderitem.Id">
+                                <div>
+                                    <h6 class="my-0">@i : @orderitem.Product.Name </h6>
+                                    <small class="text-muted">@(orderitem.Product.Description != null ? orderitem.Product.Description.Length > 30 ? orderitem.Product.Description.Substring(0, 29) : orderitem.Product.Description : "")</small><br />
+                                    <span class="badge badge-danger">Quantity: @orderitem.Quantity</span>
+                                    <span class="badge badge-primary">Unit Price: $ @orderitem.Product.Price</span>
+                                </div>
+                                <span class="text-muted">Total Price : @(orderitem.Product.Price * orderitem.Quantity)</span>
+                            </li>
+                            i++;
+
+                        }
+
+
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Total (Bill)</span>
+                            <strong>$ @Model.Order.TotalAmount</strong>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="col-md-7">
+                    <h4 class="mb-3">Billing address</h4>
+                    <form class="needs-validation" novalidate="">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="firstName">Name</label>
+                                <input type="text" class="form-control" id="Name" placeholder="" value="@Model.OrderBy.Name" required="">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email">Email @*<span class="text-muted">(Optional)</span>*@</label>
+                            <input type="email" class="form-control" id="Email" placeholder="you@example.com" value="@Model.OrderBy.Email">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address">Address</label>
+                            <input type="text" class="form-control" id="Address" placeholder="" required="" value="@Model.OrderBy.Address">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address">Status</label>
+                            <select name="Status" id="StatusId">
+                                @foreach (var availableStatus in Model.AvailableStatuses)
+                                {
+                                    var isSelectedStatus = availableStatus == Model.Order.Status;
+                                    <option @(isSelectedStatus ? "selected" : string.Empty)>@availableStatus</option>
+                                }
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container -->
+    </section>
+
+}
+
+else
+{
+    <section class="flat-row main-shop shop-slidebar">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+
+                </div>
+                <div class="col-md-7">
+                    <b>Order Details not available</b>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+
+<script>
+    $(document).ready(function () {
+        $("input").prop("disabled", true);
+    });
+        $("#StatusId").change(function () {
+
+            $.ajax({
+                url: '@Url.Action("ChangeStatus", "Order")',
+                data: {
+                    status: $("#StatusId").val(),
+                    orderId: '@Model.Order.Id'
+                }
+            }).done(function (response) {
+
+                if (response.Success) {
+
+                    swal("Done!", "Your Order Status has been Updated!", "success");
+                }
+
+                else {
+                    swal("Error!", "Unable to update order information!", "warning");
+                }
+
+            }).fail(function (XMLHTTPRequest, textStatus, errorThrown) {
+
+                swal("Error!", "Something went wrong, please try again!!!", "warning");
+
+            });
+
+        });
+</script>

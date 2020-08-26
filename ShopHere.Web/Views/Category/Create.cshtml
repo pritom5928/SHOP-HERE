@@ -1,0 +1,151 @@
+﻿
+
+@{
+    ViewBag.Title = "Create";
+
+    var imageURL = "/Content/images/placeholder.png";
+}
+
+<h2>Create Category</h2>
+
+
+<form id="createCategory">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Name <span class="text-danger">*</span> </label>
+                <input class="form-control" name="Name" />
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Description</label>
+                <input class="form-control" name="Description" />
+            </div>
+            <div class="form-group">
+                <label>Image</label>
+                <input type="hidden" id="ImageURL" name="ImageURL" />
+                <input class="form-control" id="imageUpload" name="Image" type="file" accept=".png, .jpg" />
+            </div>
+            <div class="form-group">
+                <label>Is Featured?</label>
+                <div class="input-group">
+                    <div class="radio form-control">
+                        <label><input name="isFeatured" type="radio" value="True" /> True</label>
+                    </div>
+                    <div class="radio form-control">
+                        <label><input name="isFeatured" type="radio" value="False" /> False</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="thumb">
+                <img class="img-thumbnail img-fluid" id="categoryImage" src="@imageURL" />
+            </div>
+        </div>
+    </div>
+
+    <button id="saveBtn" type="button" class="btn btn-primary">Save</button>
+    <button id="cancelBtn" type="button" class="btn btn-primary">Cancel</button>
+    <hr />
+</form>
+
+
+<script>
+
+    $('#createCategory').validate({ 
+        rules: {
+            Name: {
+                required: true,
+                minlength: 5,
+                maxlength: 100
+            },
+            Description: {
+                maxlength: 500
+            },
+
+        },
+        messages: {
+            Name: {
+                required: 'Name is required.',
+                minlength: 'Minimum length 5 character.',
+                maxlength: 'Maximum length 100 character.'
+            },
+            Description: {
+                maxlength: 'Maximum length 500 character.'
+            },
+
+        }
+    });
+
+
+
+	$("#imageUpload").change(function () {
+		var element = this;
+		var formData = new FormData();
+		var totalFiles = element.files.length;
+		for (var i = 0; i < totalFiles; i++) {
+			var file = element.files[i];
+			formData.append("Photo", file);
+		}
+		$.ajax({
+			type: 'POST',
+			url: '@Url.Action("UploadImage", "Shared")',
+            dataType: 'json',
+            data: formData,
+            contentType: false,
+            processData: false,
+		})
+        .done(function (response) {
+        	console.log(response);
+        	if(response.Success)
+        	{
+        		$("#ImageURL").val(response.ImageURL);
+        		$("#categoryImage").attr("src", response.ImageURL);
+        	}
+        })
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+        	alert("FAIL");
+        });
+	});
+
+	$("#saveBtn").click(function () {
+        debugger;
+        if ($('#createCategory').valid()) {
+            $.ajax({
+				type: 'POST',
+                url: '@Url.Action("Create", "Category")',
+				data: $("#createCategory").serialize()
+			})
+            .done(function (response) {
+                 debugger;
+                $("#tableCategoryContainer").html(response);
+                $("#actionCategoryContainer").html("");
+                focusAaction("tableCategoryContainer");
+			})
+			.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                swal({
+                    title: "Warning",
+                    text: "Please enter all required fields!",
+                    icon: "warning",
+                    dangerMode: true,
+                })
+			});
+        }
+			
+        else {
+            swal({
+                title: "Warning",
+                text: "Please enter valid input in all fields!",
+                icon: "warning",
+                dangerMode: true,
+            })
+        }
+    });
+
+    $("#cancelBtn").click(function () {
+
+        $("#actionCategoryContainer").html("");
+        focusAaction("tableCategoryContainer");
+    });
+
+</script>

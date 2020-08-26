@@ -1,0 +1,151 @@
+﻿@model ShopHere.Entities.Category
+@{
+    ViewBag.Title = "Edit";
+
+    var isTrue = Model.IsFeatured ? "checked" : string.Empty;
+    var isFalse = !Model.IsFeatured ? "checked" : string.Empty;
+
+
+    var imageUrl = !string.IsNullOrEmpty(Model.ImageUrl) ? Model.ImageUrl : "/Content/images/placeholder.png";
+}
+
+<h2>Edit Category</h2>
+
+<form id="UpdateCategory">
+    <input type="hidden" value="@Model.Id" name="Id" />
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label class="exampleInputEmail1">Name <span class="text-danger">*</span></label>
+                <input name="Name" class="form-control" value="@Model.Name" />
+            </div>
+            <div class="form-group">
+                <label class="exampleInputEmail1">Description</label>
+                <input name="Description" class="form-control" value="@Model.Description" />
+            </div>
+            <div class="form-group">
+                <label class="exampleInputEmail1">Image</label>
+                <input type="hidden" id="ImageURL" name="ImageURL" value="@Model.ImageUrl" />
+                <input class="form-control" id="imageUpload" name="Image" type="file" accept=".png, .jpg" />
+            </div>
+            <div class="form-group">
+                <label class="exampleInputEmail1">IsFeatured?</label>
+                <input type="radio" class="form-control" name="IsFeatured" value="True" @isTrue />Yes
+                <input type="radio" class="form-control" name="IsFeatured" value="False" @isFalse />No
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="thumb">
+                <img src="@imageUrl" class="img-thumbnail img-fluid" alt="Alternate Text" id="categoryImage" />
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" id="updateBtn">Update</button>
+    <button id="cancelBtn" type="button" class="btn btn-primary">Cancel</button>
+    <hr />
+
+</form>
+
+
+<script type="text/javascript">
+
+    $('#UpdateCategory').validate({
+        rules: {
+            Name: {
+                required: true,
+                minlength: 5,
+                maxlength: 100
+            },
+            Description: {
+                maxlength: 500
+            },
+
+        },
+        messages: {
+            Name: {
+                required: 'Name is required.',
+                minlength: 'Minimum length 5 character.',
+                maxlength: 'Maximum length 100 character.'
+            },
+            Description: {
+                maxlength: 'Maximum length 500 character.'
+            },
+
+        }
+    });
+
+    $("#imageUpload").change(function () {
+		var element = this;
+		var formData = new FormData();
+		var totalFiles = element.files.length;
+		for (var i = 0; i < totalFiles; i++) {
+			var file = element.files[i];
+			formData.append("Photo", file);
+		}
+		$.ajax({
+			type: 'POST',
+			url: '@Url.Action("UploadImage", "Shared")',
+            dataType: 'json',
+            data: formData,
+            processData: false,
+            contentType: false,
+			
+		})
+        .done(function (response) {
+                debugger;
+        	console.log(response);
+        	if(response.Success)
+        	{
+        		$("#ImageURL").val(response.ImageURL);
+        		$("#categoryImage").attr("src", response.ImageURL);
+        	}
+        })
+        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+        	alert("FAIL");
+        });
+	});
+
+    $("#updateBtn").click(function () {
+
+        if ($('#UpdateCategory').valid()) {
+            $.ajax({
+                 type: 'POST',
+                 url: '@Url.Action("Update", "Category")',
+                 data: $("#UpdateCategory").serialize()
+            })
+            .done(function (data) {
+                $("#tableCategoryContainer").html(data);
+                $("#actionCategoryContainer").html("");
+                focusAaction("tableCategoryContainer");
+            })
+            .fail(function (XMLHTTPRequest, textStatus, errorThrown) {
+                swal({
+                    title: "Warning",
+                    text: "Please enter all required fields!",
+                    icon: "warning",
+                    dangerMode: true,
+                })
+            });
+        }
+			
+        else {
+            swal({
+                title: "Warning",
+                text: "Please enter valid input in all fields!",
+                icon: "warning",
+                dangerMode: true,
+            })
+        }
+        
+    });
+
+    $("#cancelBtn").click(function () {
+
+        $("#actionCategoryContainer").html("");
+        focusAaction("tableCategoryContainer");
+    });
+
+
+</script>

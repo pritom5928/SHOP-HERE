@@ -1,0 +1,22 @@
+﻿@model ShopHere.Entities.Category
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete Category</h2>
+
+<form action="/Category/Delete" method="post">
+
+    <input type="hidden" value="@Model.Id" name="Id" />
+    <br />
+
+    <h4>Are u sure want to delete this items?</h4>
+
+    <button type="submit">Yes</button>
+
+
+
+</form>
+
+<a href="/Index">Cancel</a>

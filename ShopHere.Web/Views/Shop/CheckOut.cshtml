@@ -1,0 +1,121 @@
+﻿@model ShopHere.Web.ViewModels.CheckoutVieModel
+@{
+    ViewBag.Title = "Check Out";
+}
+
+@if (Model != null && Model.CartProducts != null && Model.CartProducts.Count > 0)
+{
+    var i = 1;
+    <section class="flat-row main-shop shop-slidebar">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-5">
+                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">Your cart</span>
+                    </h4>
+                    <ul class="list-group mb-3">
+
+                        @foreach (var product in Model.CartProducts)
+                        {
+                            var productQuantity = Model.CartProductIds.Where(s => s == product.Id).Count();
+
+                            <li class="list-group-item d-flex justify-content-between lh-condensed" data-id="@product.Id">
+                                <div>
+                                    <h6 class="my-0">@i : @product.Name </h6>
+                                    <small class="text-muted">@(product.Description != null ? product.Description.Length > 30 ? product.Description.Substring(0, 29) : product.Description : "")</small><br />
+                                    <span class="badge badge-danger">Quantity: @productQuantity</span>
+                                    <span class="badge badge-primary">Unit Price: $ @product.Price</span>
+                                </div>
+                                <span class="text-muted">Total Price : @(product.Price * productQuantity)</span>
+                            </li>
+                            i++;
+
+                        }
+
+
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Total (Bill)</span>
+                            <strong>$ @Model.CartProducts.Sum(s => s.Price * Model.CartProductIds.Where(sa => sa == s.Id).Count())</strong>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="col-md-7">
+                    <h4 class="mb-3">Billing address</h4>
+                    <form class="needs-validation" novalidate="">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="firstName">Name</label>
+                                <input type="text" class="form-control diableInputField" id="Name" placeholder="" value="@Model.User.Name" required="">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email">Email @*<span class="text-muted">(Optional)</span>*@</label>
+                            <input type="email" class="form-control" id="Email" placeholder="you@example.com" value="@Model.User.Email">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address">Address</label>
+                            <input type="text" class="form-control" id="Address" placeholder="" required="" value="@Model.User.Address">
+                        </div>
+                        <hr class="mb-4">
+                        <button id="placeproductBtn" class="btn btn-primary btn-lg btn-block" type="button">Place Order</button>
+                    </form>
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container -->
+    </section>
+
+<script>
+
+    $(document).ready(function () {
+            $("input").prop("disabled", true);
+    });
+    $("#placeproductBtn").click(function () {
+        debugger;
+        $.ajax({
+            url: '@Url.Action("PlaceProduct", "Shop")',
+            data: {
+                productIds: '@string.Join("-", Model.CartProductIds)',
+            }
+        }).done(function (response) {
+            debugger;
+            if (response.Success) {
+                $.cookie('Cartproducts', '', { path: '/' });
+                updateproductCartCounter();
+                swal("Done!", "Your Order has been Placed!", "success").then((value) => {
+                    window.location.href = '@Url.Action("Index", "Shop")';
+                });
+            }
+
+            else {
+                swal("Failed!", "Something went wrong, Please Try again!!!", "warning");
+            }
+
+        }).fail(function (XMLHTTPRequest, textStatus, errorThrown) {
+
+            swal("Failed!", "Something went wrong, Please Try again!!!", "warning");
+        });
+    });
+</script>
+}
+
+else
+{ 
+<section class="flat-row main-shop shop-slidebar">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+
+            </div>
+            <div class="col-md-7">
+                <b>No products in cart</b>
+            </div>
+        </div>
+    </div>
+</section>
+}
+    
+

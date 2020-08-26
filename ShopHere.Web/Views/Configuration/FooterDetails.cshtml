@@ -1,0 +1,52 @@
+﻿@model ShopHere.Web.ViewModels.ConfigViewModel
+@{
+    Layout = null;
+}
+
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-md-2">
+                <div class="widget widget-link">
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div><!-- /.widget -->
+            </div><!-- /.col-md-3 -->
+            <div class="col-sm-6 col-md-3">
+                <div class="widget widget-link link-login">
+                    <ul>
+                        <li><a href="@Url.Action("Register","Account")"> Register</a></li>
+                        <li><a href="@Url.Action("Login","Account")">Login</a></li>
+                        <li><a href="@Url.Action("CheckOut","Shop")">Your checkout</a></li>
+                    </ul>
+                </div><!-- /.widget -->
+            </div><!-- /.col-md-3 -->
+            <div class="col-sm-6 col-md-3">
+                <div class="widget widget-brand">
+                    <ul class="flat-contact">
+                        <li class="phone">@Model.CompanyMobileNumber</li>
+                        <li class="email">@Model.CompanyAddress</li>
+                        <li class="email">@Model.CompanyMail</li>
+                    </ul><!-- /.flat-contact -->
+                </div><!-- /.widget -->
+            </div><!-- /.col-md-3 -->
+            <div class="col-sm-6 col-md-4" style="display:flex;">
+                <div class="widget widget-brand">
+                    <div class="logo logo-footer">
+                        <a href="@Url.Action("Index", "Home")"><img src="~/Content/images/shophere.png" alt="image" width="107" height="24"></a>
+                    </div>
+                </div><!-- /.widget -->
+                <ul class="flat-social" style="margin: 10px 0px 0px 55px;">
+                    <li><a href="@Model.CompanyFbLink"><i class="fa fa-facebook"></i></a></li>
+                    <li><a href="@Model.TwitterUrl"><i class="fa fa-twitter"></i></a></li>
+                    <li><a href="@Model.GoogleUrl"><i class="fa fa-google"></i></a></li>
+                    <li><a href="@Model.LinkedinUrl"><i class="fa fa-linkedin"></i></a></li>
+                </ul><!-- /.flat-social -->
+
+            </div><!-- /.col-md-3 -->
+
+        </div><!-- /.row -->
+    </div><!-- /.container -->
+</footer><!-- /.footer -->

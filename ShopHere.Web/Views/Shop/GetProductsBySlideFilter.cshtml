@@ -1,0 +1,123 @@
+﻿@model ShopHere.Web.ViewModels.FilterproductsBySliderViewModel
+
+@{
+    var defaultImageURL = "/Content/images/placeholder.png";
+}
+<div class="filter-shop clearfix">
+    <p class="showing-product float-right">
+        @if (Model.Pager.TotalItems > 0)
+        {
+            @:Showing @(((Model.Pager.CurrentPage - 1) * Model.Pager.PageSize) + 1) - @(((Model.Pager.CurrentPage - 1) * Model.Pager.PageSize) + (Model.Products.Count < Model.Pager.PageSize ? Model.Products.Count : Model.Pager.PageSize)) of @Model.Pager.TotalItems products
+        }
+
+        else
+        {
+                @:Showing 0 products
+        }
+
+    </p>
+</div><!-- /.filte-shop -->
+
+<div class="product-content product-threecolumn product-slidebar clearfix">
+    <ul class="product style2 sd1">
+        @foreach (var product in Model.Products)
+        {
+            var imageURL = string.IsNullOrEmpty(product.ImageUrl) ? defaultImageURL : product.ImageUrl;
+
+            <li class="product-item">
+                <div class="product-thumb clearfix">
+                    <a href="@Url.Action("Details", "Product", new { id = product.Id})">
+                        <img src="@imageURL" alt="image" style="height:250px;">
+                    </a>
+                </div>
+                <div class="product-info clearfix" style="margin-top:1%;">
+                    <span class="product-title">
+                        @product.Name
+                    </span>
+                    <div class="price">
+                        <ins>
+                            <span class="amount">$ @product.Price</span>
+                        </ins>
+                    </div>
+                </div>
+                <div class="add-to-cart text-center">
+                    <a href="#" class="productAddToCart" product-id="@product.Id">ADD TO CART</a>
+                </div>
+                <a href="#" class="like"><i class="fa fa-heart-o"></i></a>
+            </li>
+        }
+
+    </ul><!-- /.product -->
+</div>
+
+@if (Model.Pager != null && Model.Pager.TotalPages > 1)
+{
+<div class="product-pagination text-center clearfix">
+    <ul class="flat-pagination">
+        @if (Model.Pager.CurrentPage > 1)
+        {
+
+            <li class="prev">
+                <a data-href="@Url.Action("GetProductsBySlideFilter", "Shop", new { pageNum = Model.Pager.CurrentPage - 1, sortBy=Model.SortBy, categoryId= Model.CategoryId})" class="pagedataLink"><i class="fa fa-angle-left"></i></a>
+            </li>
+            @*<li><a href="@Url.Action("Index", "Shop", new { pageNum = 1})">1</a></li>*@
+        }
+
+        @for (int page = Model.Pager.StartPage; page <= Model.Pager.EndPage; page++)
+        {
+            var activeClass = Model.Pager.CurrentPage == page ? "active bg-info" : string.Empty;
+
+            <li class="@activeClass"><a data-href="@Url.Action("GetProductsBySlideFilter", "Shop", new { pageNum = page, sortBy=Model.SortBy, categoryId= Model.CategoryId})" class="pagedataLink" title="">@page</a></li>
+        }
+
+        @if (Model.Pager.CurrentPage < Model.Pager.EndPage)
+        {
+
+            <li><a data-href="@Url.Action("GetProductsBySlideFilter", "Shop", new { pageNum = Model.Pager.CurrentPage + 1, sortBy=Model.SortBy, categoryId= Model.CategoryId})" class="pagedataLink"><i class="fa fa-angle-right"></i></a></li>
+        }
+
+    </ul>
+</div>
+}
+
+<input type="hidden" id="searchTerm" value="@Model.searchTerm" />
+<input type="hidden" id="SortBy" value="@Model.SortBy" />
+<input type="hidden" id="CategoryId" value="@Model.CategoryId" />
+
+<script type="text/javascript">
+
+    $(".pagedataLink").click(function () {
+
+        var url = $(this).attr('data-href');
+
+        if (url != null || url != "" || typeof url != "undefined") {
+            getproductsByFiltering(url);
+        }
+    });
+
+    var productCartList;
+    $(".productAddToCart").on("click", function () {
+        debugger;
+        var existingproductsInCart = $.cookie('Cartproducts');
+
+        if (existingproductsInCart != null && existingproductsInCart != "" && existingproductsInCart != undefined) {
+            productCartList = existingproductsInCart.split('-');
+        }
+
+        else {
+            productCartList = [];
+        }
+
+        var productId = $(this).attr("product-id");
+
+        productCartList.push(productId);
+
+        $.cookie('Cartproducts', productCartList.join('-'), { path: '/' });
+
+        updateproductCartCounter();
+
+        swal("Done!", "product Added to Cart Successfully!", "success");
+
+    });
+</script>
+    

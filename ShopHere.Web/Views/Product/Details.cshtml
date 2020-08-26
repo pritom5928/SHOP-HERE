@@ -1,0 +1,125 @@
+﻿@model ShopHere.Web.ViewModels.ProductDetailViewModel
+@{
+    ViewBag.Title = "Details";
+    var defaultImageURL = "/Content/images/placeholder.png";
+    var imageURL = string.IsNullOrEmpty(Model.Product.ImageUrl) ? defaultImageURL : Model.Product.ImageUrl;
+}
+
+@if (Model != null && Model.Product != null)
+{
+    <!-- Page title -->
+    <div class="page-title parallax parallax1">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="page-title-heading">
+                        <h1 class="title">@Model.Product.Name</h1>
+                    </div><!-- /.page-title-heading -->
+
+                </div><!-- /.col-md-12 -->
+            </div><!-- /.row -->
+        </div><!-- /.container -->
+    </div><!-- /.page-title -->
+
+    <section class="flat-row main-shop shop-detail">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="wrap-flexslider">
+                        <div class="inner">
+                            <div class="flexslider style-1 has-relative">
+                                <ul class="slides">
+                                    <li data-thumb="@imageURL">
+                                        <img src="@imageURL" alt="Image">
+                                        <div class="flat-icon style-1">
+                                            <a href="@imageURL" class="zoom-popup"><span class="fa fa-search-plus"></span></a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div><!-- /.flexslider -->
+                        </div>
+                    </div>
+                </div><!-- /.col-md-6 -->
+
+                <div class="col-md-6">
+                    <div class="product-detail">
+                        <div class="inner">
+                            <div class="content-detail">
+                                <h2 class="product-title">
+                                    @Model.Product.Name
+                                </h2>
+                                <p>
+                                    @Model.Product.Description
+                                </p>
+                                <div class="price">
+                                    <ins>
+                                        <span class="amount">$ @Model.Product.Price</span>
+                                    </ins>
+                                </div>
+                                <div class="product-quantity">
+                                    <div class="quantity">
+                                        <input type="text" value="1" name="quantity-number" disabled class="quantity-number" id="quantityOfThisProduct">
+                                        <span class="inc quantity-button">+</span>
+                                        <span class="dec quantity-button">-</span>
+                                    </div>
+                                    <div class="add-to-cart">
+                                        <a href="#" class="btn btn-danger" id="addToCartBtn">ADD TO CART</a>
+                                    </div>
+                                    <div class="box-like">
+                                        <a href="#" class="like"><i class="fa fa-heart-o"></i></a>
+                                    </div>
+                                </div>
+                                <div class="product-categories">
+                                    <span>Categories: </span><a href="#">@Model.Product.Category.Name</a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div><!-- /.product-detail -->
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container -->
+    </section><!-- /.flat-row -->
+    <section class="flat-row shop-related">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="title-section margin-bottom-55">
+                        <h2 class="title">Related products</h2>
+                    </div>
+
+                    @{ Html.RenderAction("Products", "Widget", new { isLatestproducts = false, CategoryId=Model.Product.Category.Id });}
+                </div>
+            </div><!-- /.row -->
+        </div>
+    </section>
+}
+
+    <script>
+        var productId = '@Model.Product.Id';
+        var productList;
+        $("#addToCartBtn").click(function () {
+            debugger;
+            var quantity = $("#quantityOfThisProduct").val();
+
+            var existingProductsInCart = $.cookie('Cartproducts');
+
+            if (existingProductsInCart != null && existingProductsInCart != undefined && existingProductsInCart != "") {
+                productList = existingProductsInCart.split('-');
+            }
+            else {
+                productList = [];
+            }
+
+            for (var i = 0; i < quantity; i++) {
+                productList.push(productId);
+            }
+
+            $.cookie('Cartproducts', productList.join('-'), { path: '/' });
+
+            updateproductCartCounter();
+
+            swal("Done!", "product Added to Cart Successfully!", "success");
+        });
+    </script>
+
