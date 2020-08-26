@@ -36,6 +36,46 @@
     <script src="~/Content/javascript/jquery.min.js"></script>
     <script src="/Content/javascript/jquery-ui.js"></script>
     <!--End: Jquery-->
+
+    <style>
+        .menu-extra li a.active {
+            background: #fff;
+            color: #333;
+        }
+
+        .tt {
+            border-bottom: 1px solid #eeeeee;
+            /*border-top: 1px solid #eeeeee;*/
+            margin-bottom:2px;
+        }
+
+        .nav-top-cart-wrapper .woocommerce-min-cart-wrap {
+            padding: 10px 10px;
+        }
+
+        .nav-top-cart-wrapper .nav-shop-cart {
+            width: 175px;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            visibility: hidden;
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-5px);
+            position: absolute;
+            right: -10px;
+            top: 100%;
+            z-index: 999999;
+            background-color: #fff;
+            padding: 0px;
+            -webkit-box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.1);
+            -moz-box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.1);
+            box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.1);
+            -webkit-transition: all ease-in-out 0.3s;
+            -moz-transition: all ease-in-out 0.3s;
+            transition: all ease-in-out 0.3s;
+        }
+
+      
+    </style>
 </head>
 <body class="header_sticky header-style-1 has-menu-extra">
     <!-- Preloader -->
@@ -58,23 +98,33 @@
                     <ul class="menu-extra">
                         <li class="box-cart nav-top-cart-wrapper">
                             <a class="icon_cart nav-cart-trigger active" href="@Url.Action("CheckOut", "Shop")"><span id="productsCartCounter">0</span></a>
-                            @*<div class="nav-shop-cart">
-                <div class="widget_shopping_cart_content">
-                    <div class="woocommerce-min-cart-wrap">
-                        <ul class="woocommerce-mini-cart cart_list product_list_widget ">
-                            <li class="woocommerce-mini-cart-item mini_cart_item">
-                                <span>No Items in Shopping Cart</span>
-                            </li>
-                        </ul>
-                    </div><!-- /.widget_shopping_cart_content -->
-                </div>
-            </div><!-- /.nav-shop-cart -->*@
+
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="box-login">
-                                <a class="icon_login" href="#">@User.Identity.Name</a>
-                            </li>
+                                <li class="box-cart nav-top-cart-wrapper">
+                                    <a class="icon_login nav-cart-trigger active" href="#">@User.Identity.Name</a>
+                                    <div class="nav-shop-cart">
+                                        <div class="widget_shopping_cart_content">
+                                            <div class="woocommerce-min-cart-wrap">
+                                                <ul class="woocommerce-mini-cart cart_list product_list_widget ">
+                                                    <li class="woocommerce-mini-cart-item mini_cart_item tt">
+                                                        <a href="@Url.Action()">ChangePassword</a>
+                                                    </li>
+                                                    <li class="woocommerce-mini-cart-item mini_cart_item tt">
+                                                        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                                                        {
+                                                           @Html.AntiForgeryToken() 
+                                                           <a href="javascript:document.getElementById('logoutForm').submit()">SignOut</a>
+                                                        }
+                                                        
+                                                    </li>
+                                                </ul>
+                                            </div><!-- /.widget_shopping_cart_content -->
+                                        </div>
+                                    </div><!-- /.nav-shop-cart -->
+                                </li>
+                            
                         }
 
                     </ul><!-- /.menu-extra -->

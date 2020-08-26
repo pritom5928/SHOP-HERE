@@ -5,6 +5,24 @@
 
 @*<h2>@ViewBag.Title.</h2>*@
 
+<style>
+    .required:after {
+        content: "*";
+        font-weight: bold;
+        color: red;
+    }
+
+    input {
+        color: #ff0000;
+        font: 1em/1.25em ;
+    }
+
+    .errMsg {
+        color: red;
+        display: none;
+    }
+</style>
+
 <section class="flat-row flat-iconbox">
     <div class="container">
         <div class="row">
@@ -19,40 +37,50 @@
 
 
         <div>
-            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "formhorizontal", role = "form" }))
+            <div class="alert alert-danger" role="alert" style="display:none;">
+                Please provide valid details...
+            </div>
+
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "formhorizontal", role = "form", id = "registerForm" }))
             {
                 @Html.AntiForgeryToken()
                 <hr />
                 @Html.ValidationSummary("", new { @class = "text-danger" })
 
                 <div class="form-group">
-                    @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label required" })
                     <div class="col-md-10">
                         @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                        <span id="NameErrMsg" class="errMsg"></span>
                     </div>
+
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label required" })
                     <div class="col-md-10">
                         @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        <span id="EmailErrMsg" class="errMsg"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label required" })
                     <div class="col-md-10">
                         @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        <span id="PasswordErrMsg" class="errMsg"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label required" })
                     <div class="col-md-10">
                         @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                        <span id="ConfirmPasswordErrMsg" class="errMsg"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label" })
+                    @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label required" })
                     <div class="col-md-10">
                         @Html.TextAreaFor(m => m.Address, new { @class = "form-control" })
+                        <span id="AddressErrMsg" class="errMsg"></span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -69,5 +97,182 @@
    
 </section>
 
+<script type="text/javascript">
 
+    var isvalid = true;
+
+    $("#registerForm").bind("submit", function (e) {
+
+        var validated = true;
+
+        var name = $("#Name").val();
+        var Email = $("#Email").val();
+        var Password = $("#Password").val();
+        var ConfirmPassword = $("#ConfirmPassword").val();
+        var Address = $("#Address").val();
+
+        if (name == null || name == "" || typeof name == undefined) {
+            $("#NameErrMsg").text("Please enter name.");
+            $("#NameErrMsg").show();
+            $("#Name").css("border-color", "red");
+            validated = false;
+        }
+
+        if (Email == null || Email == "" || typeof Email == undefined) {
+            $("#EmailErrMsg").text("Please enter valid email.");
+            $("#EmailErrMsg").show();
+            $("#Email").css("border-color", "red");
+            validated = false;
+        }
+
+        if (Password == null || Password == "" || typeof Password == undefined) {
+            $("#PasswordErrMsg").text("Please enter password.");
+            $("#PasswordErrMsg").show();
+            $("#Password").css("border-color", "red");
+            validated = false;
+        }
+
+        if (ConfirmPassword == null || ConfirmPassword == "" || typeof ConfirmPassword == undefined) {
+            $("#ConfirmPasswordErrMsg").text("Please enter password.");
+            $("#ConfirmPasswordErrMsg").show();
+            $("#ConfirmPassword").css("border-color", "red");
+            validated = false;
+        }
+
+
+        if (Address == null || Address == "" || typeof Address == undefined) {
+            $("#AddressErrMsg").text("Please enter address.");
+            $("#AddressErrMsg").show();
+            $("#Address").css("border-color", "red");
+            validated = false;
+        }
+
+        if (ConfirmPassword != Password) {
+            $("#ConfirmPasswordErrMsg").text("Confirm pasword didn't match with password.");
+            $("#ConfirmPasswordErrMsg").show();
+            $("#ConfirmPassword").css("border-color", "red");
+            validated = false;
+        }
+
+
+        if (validated == true && isvalid == true) {
+            $(".alert").alert('close')
+        }
+
+        else {
+            $(".alert").alert();
+            e.preventDefault();
+        }
+
+        return validated;
+    });
+
+    $("#Name").keyup(function () {
+         
+        var name = $("#Name").val();
+
+        if (name == null || name == "" || typeof name == undefined) {
+            $("#NameErrMsg").text("Please enter name.");
+            $("#NameErrMsg").show();
+            $("#Name").css("border-color", "red");
+            isvalid = false;
+        }
+
+        else {
+            $("#NameErrMsg").hide();
+            $("#Name").css("border-color", "#c5c5c5");
+            isvalid = true;
+        }
+
+        return isvalid;
+    });
+
+    $("#Email").keyup(function () {
+         
+        var Email = $("#Email").val();
+
+        if (Email == null || Email == "" || typeof Email == undefined) {
+            $("#EmailErrMsg").text("Please enter valid email.");
+            $("#EmailErrMsg").show();
+            $("#Email").css("border-color", "red");
+            isvalid = false;
+        }
+
+        else {
+            $("#EmailErrMsg").hide();
+            $("#Email").css("border-color", "#c5c5c5");
+            isvalid = true;
+        }
+
+        return isvalid;
+    });
+    
+    $("#Password").keyup(function () {
+         
+        var Password = $("#Password").val();
+
+        if (Password == null || Password == "" || typeof Password == undefined) {
+            $("#PasswordErrMsg").text("Please enter password.");
+            $("#PasswordErrMsg").show();
+            $("#Password").css("border-color", "red");
+            isvalid = false;
+        }
+
+        else {
+            $("#PasswordErrMsg").hide();
+            $("#Password").css("border-color", "#c5c5c5");
+            isvalid = true;
+        }
+
+        return isvalid;
+    });
+
+    $("#ConfirmPassword").keyup(function () {
+         
+        var ConfirmPassword = $("#ConfirmPassword").val();
+        var Password = $("#Password").val();
+
+        if (ConfirmPassword == null || ConfirmPassword == "" || typeof ConfirmPassword == undefined) {
+            $("#ConfirmPasswordErrMsg").text("Please enter password.");
+            $("#ConfirmPasswordErrMsg").show();
+            $("#ConfirmPassword").css("border-color", "red");
+            isvalid = false;
+        }
+
+        else if (ConfirmPassword != Password) {
+            $("#ConfirmPasswordErrMsg").text("Confirm pasword didn't match with password.");
+            $("#ConfirmPasswordErrMsg").show();
+            $("#ConfirmPassword").css("border-color", "red");
+            isvalid = false;
+        }
+
+        else {
+            $("#ConfirmPasswordErrMsg").hide();
+            $("#ConfirmPassword").css("border-color", "#c5c5c5");
+            isvalid = true;
+        }
+
+        return isvalid;
+    });
+
+    $("#Address").keyup(function () {
+         
+        var Address = $("#Address").val();
+       
+        if (Address == null || Address == "" || typeof Address == undefined) {
+            $("#AddressErrMsg").text("Please enter address.");
+            $("#AddressErrMsg").show();
+            $("#Address").css("border-color", "red");
+            isvalid = false;
+        }
+        
+        else {
+            $("#AddressErrMsg").hide();
+            $("#Address").css("border-color", "#c5c5c5");
+            isvalid = true;
+        }
+
+        return isvalid;
+    });
+</script>
    
