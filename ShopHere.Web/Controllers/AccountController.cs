@@ -150,6 +150,7 @@ namespace ShopHere.Web.Controllers
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
 
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name, Address = model.Address };
