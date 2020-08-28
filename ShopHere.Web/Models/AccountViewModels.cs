@@ -74,7 +74,6 @@ namespace ShopHere.Web.Models
 
         [Required]
         [DataType(DataType.EmailAddress)]
-        [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
@@ -119,4 +118,5 @@ namespace ShopHere.Web.Models
         [Display(Name = "Email")]
         public string Email { get; set; }
     }
+   
 }

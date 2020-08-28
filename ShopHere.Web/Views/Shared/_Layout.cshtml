@@ -109,7 +109,7 @@
                                             <div class="woocommerce-min-cart-wrap">
                                                 <ul class="woocommerce-mini-cart cart_list product_list_widget ">
                                                     <li class="woocommerce-mini-cart-item mini_cart_item tt">
-                                                        <a href="@Url.Action()">ChangePassword</a>
+                                                        <a href="@Url.Action("ChangePassword","Manage")">ChangePassword</a>
                                                     </li>
                                                     <li class="woocommerce-mini-cart-item mini_cart_item tt">
                                                         @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
@@ -140,12 +140,15 @@
                                 <li>
                                     <a href="@Url.Action("CheckOut", "Shop")">CHECKOUT</a>
                                 </li>
-                                <li>
-                                    <a href="@Url.Action("Register", "Account")">SIGN UP</a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("Login", "Account")">SIGN IN</a>
-                                </li>
+                                @if (!User.Identity.IsAuthenticated)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Register", "Account")">SIGN UP</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Login", "Account")">SIGN IN</a>
+                                    </li>
+                                }
                             </ul>
                         </nav><!-- /.mainnav -->
                     </div><!-- /.nav-wrap -->

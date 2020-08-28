@@ -35,13 +35,12 @@
             </div><!-- /.col-md-12 -->
         </div><!-- /.row -->
 
-
         <div>
             <div class="alert alert-danger" role="alert" style="display:none;">
                 Please provide valid details...
             </div>
 
-            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "formhorizontal", role = "form", id = "registerForm" }))
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "formhorizontal", role = "form", @id = "registerForm", @autocomplete = "off" }))
             {
                 @Html.AntiForgeryToken()
                 <hr />
@@ -59,6 +58,7 @@
                     @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label required" })
                     <div class="col-md-10">
                         @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        @*<input type="text" name="Email" class = "form-control"  value=""  autocomplete="off" />*@
                         <span id="EmailErrMsg" class="errMsg"></span>
                     </div>
                 </div>
@@ -66,6 +66,7 @@
                     @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label required" })
                     <div class="col-md-10">
                         @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        @*<input type="password" name="Password" class="form-control" value="" autocomplete="off" />*@
                         <span id="PasswordErrMsg" class="errMsg"></span>
                     </div>
                 </div>
@@ -98,6 +99,18 @@
 </section>
 
 <script type="text/javascript">
+
+    $(document).ready(function () {
+        debugger;
+        document.getElementById("registerForm").reset();
+        //$('#registerForm')[0].reset();
+        //$('#registerForm').trigger("reset");
+    });
+
+    //$(window).load(function () {
+    //    debugger;
+    //    $("#registerForm").find("input[type=text], textarea").val("");
+    //});
 
     var isvalid = true;
 
@@ -233,7 +246,7 @@
         var Password = $("#Password").val();
 
         if (ConfirmPassword == null || ConfirmPassword == "" || typeof ConfirmPassword == undefined) {
-            $("#ConfirmPasswordErrMsg").text("Please enter password.");
+            $("#ConfirmPasswordErrMsg").text("Please enter confirm password.");
             $("#ConfirmPasswordErrMsg").show();
             $("#ConfirmPassword").css("border-color", "red");
             isvalid = false;

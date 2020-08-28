@@ -139,6 +139,7 @@ namespace ShopHere.Web.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+           
             return View();
         }
 
@@ -156,6 +157,7 @@ namespace ShopHere.Web.Controllers
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    ModelState.Clear();
                     
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
@@ -171,7 +173,7 @@ namespace ShopHere.Web.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
