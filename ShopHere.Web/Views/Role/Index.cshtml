@@ -1,0 +1,56 @@
+﻿@*@model IEnumerable<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>*@ 
+
+@model ShopHere.Web.ViewModels.RoleViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="title-section">
+                    <h2 class="title">
+                        Roles
+                    </h2>
+                </div><!-- /.title-section -->
+            </div><!-- /.col-md-12 -->
+        </div><!-- /.row -->
+    </div>
+
+    <div class="container">
+        <div id="roleTableContainer">
+
+            <div>
+                <table class="table table-striped" id="roleTable">
+                    <thead>
+                        <tr>
+                            <th class="font-weight-bold">Role Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null &&  Model.Roles != null && Model.Roles.Count > 0)
+                        {
+                            foreach (var item in Model.Roles)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                </tr>
+                               
+                            }
+                        }
+
+                        else
+                        {
+                                 <tr>
+                                     <td class="text-danger">No roles found. </td>
+                                 </tr>
+                        }
+                    </tbody>
+                </table>
+                <hr/>
+            </div>
+        </div>
+    </div>
+
+
+

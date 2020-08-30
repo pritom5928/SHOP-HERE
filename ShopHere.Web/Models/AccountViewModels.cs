@@ -88,6 +88,11 @@ namespace ShopHere.Web.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [MinLength(3)]
+        [MaxLength(100)]
+        public string RoleName { get; set; }
     }
 
     public class ResetPasswordViewModel

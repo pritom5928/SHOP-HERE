@@ -139,7 +139,6 @@ namespace ShopHere.Web.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-           
             return View();
         }
 
@@ -156,6 +155,7 @@ namespace ShopHere.Web.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    await UserManager.AddToRoleAsync(user.Id, model.RoleName);
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     ModelState.Clear();
                     

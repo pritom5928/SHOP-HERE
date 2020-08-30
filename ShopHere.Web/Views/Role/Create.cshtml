@@ -1,0 +1,105 @@
+﻿@model Microsoft.AspNet.Identity.EntityFramework.IdentityRole
+@{
+    ViewBag.Title = "Create";
+}
+
+<div class="container">
+    <div style="margin-top: 30px; margin-bottom: 30px;">
+        <form action="/Role/Create" id="CreateRole" method="post" autocomplete="off">
+            <div class="row">
+                <div class="col-md-8">
+                    @Html.HiddenFor(s => s.Id)
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Role Name <span class="text-danger">*</span></label>
+                        <input name="Name" class="form-control" placeholder="Name">
+                    </div>
+
+                    <button type="button" id="saveBtn" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+            <hr />
+        </form>
+    </div>
+</div>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+<script type="text/javascript">
+
+    $('#CreateRole').validate({
+        rules: {
+            Name: {
+                required: true,
+                minlength: 3,
+                maxlength: 100
+            },
+           
+        },
+        messages: {
+            Name: {
+                required: 'Name is required.',
+                minlength: 'Minimum length 3 character.',
+                maxlength: 'Maximum length 100 character.'
+            },
+           
+        }
+    });
+
+    
+
+    $("#saveBtn").click(function () {
+        debugger;
+        if ($('#CreateRole').valid())
+        {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Create", "Role")',
+                data: $("#CreateRole").serialize()
+            })
+            .done(function (data) {
+                debugger;
+                if (data) {
+
+                    swal({
+                        title: "Success",
+                        text: "Role hase been added successfully!!!",
+                        icon: "success",
+                        dangerMode: false,
+                        setTimeout: 2000
+                    })
+
+                    setTimeout(function () {
+                        window.location.href = "/Role/Index";
+                    }, 3000);
+                    
+                }
+
+                else {
+                    swal({
+                        title: "Warning",
+                        text: "This role has already been exists!!!",
+                        icon: "warning",
+                        dangerMode: true,
+                    })
+                }
+            })
+            .fail(function (XMLHTTPRequest, textStatus, errorThrown) {
+                swal({
+                    title: "Warning",
+                    text: "Something went wrong, please try again!",
+                    icon: "warning",
+                    dangerMode: true,
+                })
+            });
+        }
+
+        else {
+            swal({
+                title: "Warning",
+                text: "Please enter valid input in all fields!",
+                icon: "warning",
+                dangerMode: true,
+            })
+        }
+
+    });
+
+</script>

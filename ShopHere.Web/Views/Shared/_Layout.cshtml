@@ -102,32 +102,33 @@
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
-                                <li class="box-cart nav-top-cart-wrapper">
-                                    <a class="icon_login nav-cart-trigger active" href="#">@User.Identity.Name</a>
-                                    <div class="nav-shop-cart">
-                                        <div class="widget_shopping_cart_content">
-                                            <div class="woocommerce-min-cart-wrap">
-                                                <ul class="woocommerce-mini-cart cart_list product_list_widget ">
-                                                    <li class="woocommerce-mini-cart-item mini_cart_item tt">
-                                                        <a href="@Url.Action("ChangePassword","Manage")">ChangePassword</a>
-                                                    </li>
-                                                    <li class="woocommerce-mini-cart-item mini_cart_item tt">
-                                                        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
-                                                        {
-                                                           @Html.AntiForgeryToken() 
-                                                           <a href="javascript:document.getElementById('logoutForm').submit()">SignOut</a>
-                                                        }
-                                                        
-                                                    </li>
-                                                </ul>
-                                            </div><!-- /.widget_shopping_cart_content -->
-                                        </div>
-                                    </div><!-- /.nav-shop-cart -->
-                                </li>
-                            
+                            <li class="box-cart nav-top-cart-wrapper">
+                                <a class="icon_login nav-cart-trigger active" href="#">@User.Identity.Name</a>
+                                <div class="nav-shop-cart">
+                                    <div class="widget_shopping_cart_content">
+                                        <div class="woocommerce-min-cart-wrap">
+                                            <ul class="woocommerce-mini-cart cart_list product_list_widget ">
+                                                <li class="woocommerce-mini-cart-item mini_cart_item tt">
+                                                    <a href="@Url.Action("ChangePassword","Manage")">ChangePassword</a>
+                                                </li>
+                                                <li class="woocommerce-mini-cart-item mini_cart_item tt">
+                                                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                                                    {
+                                                        @Html.AntiForgeryToken()
+                                                        <a href="javascript:document.getElementById('logoutForm').submit()">SignOut</a>
+                                                    }
+
+                                                </li>
+                                            </ul>
+                                        </div><!-- /.widget_shopping_cart_content -->
+                                    </div>
+                                </div><!-- /.nav-shop-cart -->
+                            </li>
+
                         }
 
                     </ul><!-- /.menu-extra -->
+
                     <div class="nav-wrap">
                         <nav id="mainnav" class="mainnav">
                             <ul class="menu">
@@ -149,7 +150,39 @@
                                         <a href="@Url.Action("Login", "Account")">SIGN IN</a>
                                     </li>
                                 }
+
+                                @if (User.Identity.IsAuthenticated && (User.IsInRole("SuperAdmin") || User.IsInRole("Admin")))
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "Category")">CATEGORIES</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index", "Product")">PRODUCTS</a>
+                                    </li>
+                                }
+
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("SuperAdmin"))
+                                {
+                                    <li class="box-cart nav-top-cart-wrapper">
+                                        <a class="icon_login nav-cart-trigger active" href="#">MANAGE ROLE</a>
+                                        <div class="nav-shop-cart">
+                                            <div class="widget_shopping_cart_content">
+                                                <div class="woocommerce-min-cart-wrap">
+                                                    <ul class="woocommerce-mini-cart cart_list product_list_widget ">
+                                                        <li class="woocommerce-mini-cart-item mini_cart_item tt" style="padding-left:10px;">
+                                                            <a href="@Url.Action("Create","Role")">Create Role</a>
+                                                        </li>
+                                                        <li class="woocommerce-mini-cart-item mini_cart_item tt" style="padding-left:10px;">
+                                                            <a href="@Url.Action("Index","Role")">Role List</a>
+                                                        </li>
+                                                    </ul>
+                                                </div><!-- /.widget_shopping_cart_content -->
+                                            </div>
+                                        </div><!-- /.nav-shop-cart -->
+                                    </li>
+                                }
                             </ul>
+                            
                         </nav><!-- /.mainnav -->
                     </div><!-- /.nav-wrap -->
                 </div><!-- /.container-fluid -->
